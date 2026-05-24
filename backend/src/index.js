@@ -21,6 +21,10 @@ app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
+// Post 관련 API 라우트 마운트
+const postRoutes = require('./routes/postRoutes');
+app.use('/api/posts', postRoutes);
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
