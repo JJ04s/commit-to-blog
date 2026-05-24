@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useGlobalContext } from '../../context/GlobalContext';
 import { postService } from '../../api/postService';
 import './PostEditor.css';
 
-const PostEditor = ({ initialData = {} }) => {
+const PostEditor = () => {
   const { 
     title, setTitle, 
     content, setContent, 
@@ -11,19 +11,23 @@ const PostEditor = ({ initialData = {} }) => {
     selectedRepo,
     selectedCommit,
     setActiveTab,
-    setPosts
+    setPosts,
+    editingPostId, setEditingPostId
   } = useGlobalContext();
 
   const [isSaving, setIsSaving] = useState(false);
   const [tagInput, setTagInput] = useState('');
+  const lastSha = useRef(null);
 
-  // 초기 데이터 또는 선택된 커밋 변경 시 동기화 (SHA가 바뀔 때만)
+  // 새로운 커밋이 선택되었을 때만 에디터 초기화
   useEffect(() => {
-    if (initialData.sha) {
-      setTitle(initialData.title || '');
-      setContent(initialData.content || '');
+    // 수정 모드가 아닐 때만 자동 초기화 수행
+    if (!editingPostId && selectedCommit && selectedCommit.sha !== lastSha.current) {
+      setTitle(selectedCommit.message || '');
+      setContent(`Summary for commit: ${selectedCommit.sha}\n\nThis is an auto-generated placeholder content.`);
+      lastSha.current = selectedCommit.sha;
     }
-  }, [initialData.sha, setTitle, setContent]);
+  }, [selectedCommit, setTitle, setContent, editingPostId]);
 
   const handleTagKeyDown = (e) => {
     if (e.key === 'Enter' && tagInput.trim()) {
@@ -60,13 +64,20 @@ const PostEditor = ({ initialData = {} }) => {
         githubUrl: selectedCommit.html_url || `https://github.com/${selectedRepo}/commit/${selectedCommit.sha}`
       };
 
-      await postService.createPost(postData);
+      if (editingPostId) {
+        // 기존 포스트 수정 (PUT)
+        await postService.updatePost(editingPostId, postData);
+        alert('Post updated successfully!');
+      } else {
+        // 신규 포스트 생성 (POST)
+        await postService.createPost(postData);
+        alert('Post saved successfully!');
+      }
       
-      // 저장 성공 후 목록 갱신 및 탭 전환
+      // 상태 초기화 및 이동
       const updatedPosts = await postService.getPosts();
       setPosts(updatedPosts);
-      
-      alert('Post saved successfully!');
+      setEditingPostId(null); // 수정 모드 해제
       setActiveTab('VIEW');
     } catch (error) {
       console.error('Failed to save post:', error);
@@ -80,7 +91,7 @@ const PostEditor = ({ initialData = {} }) => {
     <div className="post-editor">
       <div className="editor-toolbar">
         <div className="editor-status">
-          {selectedCommit ? `Commit: ${selectedCommit.sha.substring(0, 7)}` : 'No Commit Selected'}
+          {editingPostId ? `Editing Post: ${editingPostId}` : (selectedCommit ? `Commit: ${selectedCommit.sha.substring(0, 7)}` : 'No Commit Selected')}
         </div>
         <button className="ai-gen-btn">✨ AI 요약 생성</button>
       </div>
@@ -135,7 +146,7 @@ const PostEditor = ({ initialData = {} }) => {
           onClick={handleSave}
           disabled={isSaving || !selectedCommit}
         >
-          {isSaving ? 'Saving...' : 'Save Post'}
+          {isSaving ? 'Saving...' : (editingPostId ? 'Update Post' : 'Save Post')}
         </button>
       </div>
     </div>

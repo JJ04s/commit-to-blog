@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import FilterBar from '../../component/FilterBar/FilterBar';
 import PostCard from '../../component/PostCard/PostCard';
 import { useGlobalContext } from '../../context/GlobalContext';
@@ -6,11 +7,16 @@ import { postService } from '../../api/postService';
 import './ViewPage.css';
 
 const ViewPage = () => {
+  const navigate = useNavigate();
   const { 
     posts, setPosts, 
     repoFilter,
     typeFilter,
-    tagFilter 
+    tagFilter,
+    setTitle, setContent, setTags,
+    setEditingPostId,
+    setSelectedRepo,
+    setSelectedCommit
   } = useGlobalContext();
   const [isLoading, setIsLoading] = useState(true);
   const [selectedPostForView, setSelectedPostForView] = useState(null);
@@ -38,9 +44,18 @@ const ViewPage = () => {
     return matchRepo && matchType && matchTag;
   });
 
-  const handleEdit = (id) => {
-    console.log(`Edit post with id: ${id}`);
-    // TODO: F3-2 수정 모드 구현 시 완성
+  const handleEdit = (post) => {
+    // 전역 상태에 포스트 데이터 주입
+    setTitle(post.title);
+    setContent(post.content);
+    setTags(post.tags || []);
+    setEditingPostId(post._id);
+    setSelectedRepo(post.repoName);
+    // 수정 모드에서는 가짜 커밋 객체를 생성하여 에디터가 SHA를 인식하게 함
+    setSelectedCommit({ sha: post.commitSha });
+    
+    // 작성 탭으로 이동
+    navigate('/write');
   };
 
   if (isLoading) {
@@ -56,7 +71,7 @@ const ViewPage = () => {
             ← Back to List
           </button>
           <div className="detail-actions">
-            <button className="edit-action-btn" onClick={() => handleEdit(selectedPostForView._id)}>
+            <button className="edit-action-btn" onClick={() => handleEdit(selectedPostForView)}>
               Edit Post
             </button>
           </div>
@@ -96,7 +111,7 @@ const ViewPage = () => {
               <PostCard 
                 key={post._id} 
                 post={post} 
-                onEdit={() => handleEdit(post._id)}
+                onEdit={() => handleEdit(post)}
                 onClick={() => setSelectedPostForView(post)} 
               />
             ))
