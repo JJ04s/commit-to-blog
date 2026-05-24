@@ -13,11 +13,13 @@ const ViewPage = () => {
     repoFilter,
     typeFilter,
     tagFilter,
+    searchTerm,
     setTitle, setContent, setTags,
     setEditingPostId,
     setSelectedRepo,
     setSelectedCommit
   } = useGlobalContext();
+  
   const [isLoading, setIsLoading] = useState(true);
   const [selectedPostForView, setSelectedPostForView] = useState(null);
 
@@ -36,12 +38,16 @@ const ViewPage = () => {
     fetchPosts();
   }, [setPosts]);
 
-  // 필터링 로직
+  // 필터링 로직 보강
   const filteredPosts = posts.filter(post => {
     const matchRepo = repoFilter === "전체" || post.repoName === repoFilter;
     const matchType = typeFilter === "All" || post.type === typeFilter;
-    const matchTag = tagFilter.length === 0 || tagFilter.every(t => post.tags.includes(t));
-    return matchRepo && matchType && matchTag;
+    const matchTag = tagFilter.length === 0 || tagFilter.every(t => (post.tags || []).includes(t));
+    const matchSearch = !searchTerm || 
+      (post.title && post.title.toLowerCase().includes(searchTerm.toLowerCase())) || 
+      (post.content && post.content.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+    return matchRepo && matchType && matchTag && matchSearch;
   });
 
   const handleEdit = (post) => {
@@ -83,7 +89,7 @@ const ViewPage = () => {
             <div className="detail-meta">
               <span className="detail-type">{selectedPostForView.type || 'Post'}</span>
               <div className="detail-tags">
-                {selectedPostForView.tags.map(tag => (
+                {(selectedPostForView.tags || []).map(tag => (
                   <span key={tag} className="detail-tag">#{tag}</span>
                 ))}
               </div>

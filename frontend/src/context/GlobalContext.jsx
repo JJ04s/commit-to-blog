@@ -25,6 +25,7 @@ export const GlobalProvider = ({ children }) => {
   const [repoFilter, setRepoFilter] = useState("전체");
   const [typeFilter, setTypeFilter] = useState("All");
   const [tagFilter, setTagFilter] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // D. 레이아웃 및 화면 제어 관련 상태
   const [activeTab, setActiveTab] = useState("VIEW");
@@ -50,6 +51,7 @@ export const GlobalProvider = ({ children }) => {
     repoFilter, setRepoFilter,
     typeFilter, setTypeFilter,
     tagFilter, setTagFilter,
+    searchTerm, setSearchTerm,
     // D
     activeTab, setActiveTab,
     editingPostId, setEditingPostId

@@ -4,13 +4,26 @@ import './FilterBar.css';
 
 const FilterBar = ({ totalCount }) => {
   const { 
+    posts,
     repos, 
     repoFilter, setRepoFilter,
     typeFilter, setTypeFilter,
-    tagFilter, setTagFilter 
+    tagFilter, setTagFilter,
+    searchTerm, setSearchTerm
   } = useGlobalContext();
 
   const types = ['All', 'Feat', 'Fix', 'Refactor', 'Docs', 'Style'];
+
+  // 현재 포스트들에서 고유 태그 추출
+  const availableTags = Array.from(new Set(posts.flatMap(post => post.tags || [])));
+
+  const handleTagToggle = (tag) => {
+    if (tagFilter.includes(tag)) {
+      setTagFilter(tagFilter.filter(t => t !== tag));
+    } else {
+      setTagFilter([...tagFilter, tag]);
+    }
+  };
 
   const getTypeColor = (type) => {
     switch (type.toLowerCase()) {
@@ -67,9 +80,22 @@ const FilterBar = ({ totalCount }) => {
       <div className="filter-group search-group">
         <input 
           type="text" 
-          placeholder="Search (title or #tag)..." 
-          onChange={(e) => console.log('Search not implemented yet')}
+          placeholder="Search title or content..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
+      </div>
+
+      <div className="tag-filters">
+        {availableTags.map(tag => (
+          <button
+            key={tag}
+            className={`filter-tag-badge ${tagFilter.includes(tag) ? 'active' : ''}`}
+            onClick={() => handleTagToggle(tag)}
+          >
+            #{tag}
+          </button>
+        ))}
       </div>
       
       <div className="results-info" style={{ fontSize: '11px', color: '#5c6370', marginLeft: '10px' }}>
