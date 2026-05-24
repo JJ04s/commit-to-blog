@@ -5,12 +5,12 @@ import { MOCK_REPOS, MOCK_COMMITS, MOCK_POSTS } from '../api/mockData';
 const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
-  // A. 요약할 커밋 로그 선택 기능 관련 상태 (초기값으로 목데이터 주입)
-  const [repos, setRepos] = useState(MOCK_REPOS.map(r => r.name));
+  // A. 요약할 커밋 로그 선택 기능 관련 상태 (목데이터 제거)
+  const [repos, setRepos] = useState([]);
   const [selectedRepo, setSelectedRepo] = useState("");
   const [branches, setBranches] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState("");
-  const [commits, setCommits] = useState(MOCK_COMMITS);
+  const [commits, setCommits] = useState([]);
   const [selectedCommit, setSelectedCommit] = useState(null);
 
   // B. 편집기 및 생성 기능 관련 상태
