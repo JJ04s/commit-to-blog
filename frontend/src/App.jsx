@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Layout from './component/Layout';
-import ViewPage from './page/ViewPage';
-import WritePage from './page/WritePage';
+import Layout from './component/Layout/Layout';
+import ViewPage from './page/ViewPage/ViewPage';
+import WritePage from './page/WritePage/WritePage';
 
 function App() {
   return (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import FilterBar from '../component/FilterBar';
-import PostCard from '../component/PostCard';
-import { MOCK_POSTS, getMockRepositories } from '../api/mockData';
+import FilterBar from '../../component/FilterBar/FilterBar';
+import PostCard from '../../component/PostCard/PostCard';
+import { MOCK_POSTS, getMockRepositories } from '../../api/mockData';
 import './ViewPage.css';
 
 const ViewPage = () => {
