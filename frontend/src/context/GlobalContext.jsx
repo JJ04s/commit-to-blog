@@ -20,9 +20,10 @@ export const GlobalProvider = ({ children }) => {
   const [isSyncing, setIsSyncing] = useState(false);
   const [tags, setTags] = useState([]);
 
-  // C. 보기 및 필터 기능 관련 상태 (초기값으로 목데이터 주입)
-  const [posts, setPosts] = useState(MOCK_POSTS);
+  // C. 보기 및 필터 기능 관련 상태 (초기값 빈 배열로 변경)
+  const [posts, setPosts] = useState([]);
   const [repoFilter, setRepoFilter] = useState("전체");
+  const [typeFilter, setTypeFilter] = useState("All");
   const [tagFilter, setTagFilter] = useState([]);
 
   // D. 레이아웃 및 화면 제어 관련 상태
@@ -47,6 +48,7 @@ export const GlobalProvider = ({ children }) => {
     // C
     posts, setPosts,
     repoFilter, setRepoFilter,
+    typeFilter, setTypeFilter,
     tagFilter, setTagFilter,
     // D
     activeTab, setActiveTab,

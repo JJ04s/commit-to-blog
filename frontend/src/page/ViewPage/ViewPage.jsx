@@ -1,67 +1,66 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FilterBar from '../../component/FilterBar/FilterBar';
 import PostCard from '../../component/PostCard/PostCard';
-import { MOCK_POSTS, getMockRepositories } from '../../api/mockData';
+import { useGlobalContext } from '../../context/GlobalContext';
+import { postService } from '../../api/postService';
 import './ViewPage.css';
 
 const ViewPage = () => {
-  const [filters, setFilters] = useState({
-    repository: 'All',
-    type: 'All',
-    search: ''
-  });
+  const { 
+    posts, setPosts, 
+    repoFilter,
+    typeFilter,
+    tagFilter 
+  } = useGlobalContext();
+  const [isLoading, setIsLoading] = useState(true);
 
-  const repositories = getMockRepositories();
-
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-  };
-
-  const filteredPosts = MOCK_POSTS.filter(post => {
-    const matchRepo = filters.repository === 'All' || post.repository === filters.repository;
-    const matchType = filters.type === 'All' || post.type === filters.type;
-    
-    // 검색 로직 보완
-    const searchTerm = filters.search.toLowerCase();
-    let matchSearch = true;
-    
-    if (searchTerm) {
-      if (searchTerm.startsWith('#')) {
-        // #으로 시작하면 태그에서만 검색 (예: #react -> react 태그 찾기)
-        const tagQuery = searchTerm.slice(1);
-        matchSearch = post.tags.some(tag => tag.toLowerCase().includes(tagQuery));
-      } else {
-        // 일반 검색은 제목과 태그 모두 포함
-        matchSearch = post.title.toLowerCase().includes(searchTerm) || 
-                      post.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setIsLoading(true);
+      try {
+        const data = await postService.getPosts();
+        setPosts(data);
+      } catch (error) {
+        console.error('Failed to fetch posts:', error);
+      } finally {
+        setIsLoading(false);
       }
-    }
-    
-    return matchRepo && matchType && matchSearch;
+    };
+    fetchPosts();
+  }, [setPosts]);
+
+  // 필터링 로직
+  const filteredPosts = posts.filter(post => {
+    const matchRepo = repoFilter === "전체" || post.repoName === repoFilter;
+    const matchType = typeFilter === "All" || post.type === typeFilter;
+    const matchTag = tagFilter.length === 0 || tagFilter.every(t => post.tags.includes(t));
+    return matchRepo && matchType && matchTag;
   });
 
   const handleEdit = (id) => {
     console.log(`Edit post with id: ${id}`);
+    // TODO: F3-2 수정 모드 구현 시 완성
   };
+
+  if (isLoading) {
+    return <div className="view-page loading">Loading posts from DB...</div>;
+  }
 
   return (
     <div className="view-page">
       <FilterBar 
-        filters={filters} 
-        onFilterChange={handleFilterChange} 
         totalCount={filteredPosts.length}
-        repositories={repositories}
       />
       
       <div className="view-content-scroll">
         <div className="posts-grid">
           {filteredPosts.length > 0 ? (
             filteredPosts.map(post => (
-              <PostCard key={post.id} post={post} onEdit={handleEdit} />
+              <PostCard key={post._id} post={post} onEdit={() => handleEdit(post._id)} />
             ))
           ) : (
             <div className="no-results">
-              <p>조건에 맞는 포스트가 없습니다.</p>
+              <p>저장된 포스트가 없습니다.</p>
             </div>
           )}
         </div>

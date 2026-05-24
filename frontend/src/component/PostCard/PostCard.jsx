@@ -2,8 +2,10 @@ import React from 'react';
 import './PostCard.css';
 
 const PostCard = ({ post, onEdit }) => {
-  const getTypeColor = (type) => {
-    switch (type.toLowerCase()) {
+  // 방어 코드: post나 post.type이 없을 경우 대비
+  const getTypeColor = (type = 'feat') => {
+    const safeType = type ? type.toLowerCase() : 'feat';
+    switch (safeType) {
       case 'feat': return '#98c379';
       case 'fix': return '#e06c75';
       case 'refactor': return '#c678dd';
@@ -14,8 +16,8 @@ const PostCard = ({ post, onEdit }) => {
   };
 
   const handleEditClick = (e) => {
-    e.stopPropagation(); // Prevent triggering card click
-    onEdit(post.id);
+    e.stopPropagation();
+    if (onEdit) onEdit(post._id);
   };
 
   return (
@@ -32,26 +34,31 @@ const PostCard = ({ post, onEdit }) => {
       </button>
 
       <div className="card-header">
-        <span className="repo-name">{post.repository}</span>
+        <span className="repo-name">{post.repoName || 'Unknown Repository'}</span>
         <h3 className="post-title">{post.title}</h3>
       </div>
       
       <div className="post-meta">
         <span 
           className="type-badge" 
-          style={{ borderColor: getTypeColor(post.type), color: getTypeColor(post.type) }}
+          style={{ 
+            borderColor: getTypeColor(post.type), 
+            color: getTypeColor(post.type) 
+          }}
         >
-          {post.type}
+          {post.type || 'Post'}
         </span>
         <div className="post-tags">
-          {post.tags.map(tag => (
+          {post.tags && post.tags.map(tag => (
             <span key={tag} className="tag">#{tag}</span>
           ))}
         </div>
       </div>
 
       <div className="card-footer">
-        <span className="post-date">{new Date(post.createdAt).toLocaleDateString()}</span>
+        <span className="post-date">
+          {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : 'No Date'}
+        </span>
       </div>
     </div>
   );
