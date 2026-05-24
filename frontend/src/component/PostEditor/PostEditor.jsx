@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { useGlobalContext } from '../../context/GlobalContext';
 import { postService } from '../../api/postService';
 import './PostEditor.css';
@@ -116,8 +117,8 @@ const PostEditor = () => {
           />
           <div className="markdown-preview">
             <div className="preview-label">PREVIEW</div>
-            <div className="preview-placeholder">
-              {content || 'Content preview will appear here...'}
+            <div className="markdown-body">
+              <ReactMarkdown>{content || '*Content preview will appear here...*'}</ReactMarkdown>
             </div>
           </div>
         </div>

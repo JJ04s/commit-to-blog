@@ -87,9 +87,55 @@
   background-color: var(--bg-color);
   border: 1px solid var(--border-color);
   border-radius: 4px;
-  padding: 15px;
+  padding: 20px;
   overflow-y: auto;
   position: relative;
+}
+
+.markdown-body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+.markdown-body h1, .markdown-body h2, .markdown-body h3 {
+  color: #ffffff;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 5px;
+}
+
+.markdown-body p {
+  margin-bottom: 10px;
+}
+
+.markdown-body code {
+  background-color: var(--header-bg);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Consolas', monospace;
+  color: #e06c75;
+}
+
+.markdown-body pre {
+  background-color: var(--header-bg);
+  padding: 15px;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-bottom: 10px;
+}
+
+.markdown-body ul, .markdown-body ol {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.markdown-body blockquote {
+  border-left: 4px solid var(--accent-color);
+  padding-left: 15px;
+  color: #5c6370;
+  font-style: italic;
 }
 
 .preview-label {

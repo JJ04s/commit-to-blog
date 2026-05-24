@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import FilterBar from '../../component/FilterBar/FilterBar';
 import PostCard from '../../component/PostCard/PostCard';
 import { useGlobalContext } from '../../context/GlobalContext';
@@ -96,8 +97,8 @@ const ViewPage = () => {
               <span className="detail-date">{new Date(selectedPostForView.createdAt).toLocaleDateString()}</span>
             </div>
           </header>
-          <div className="content-body">
-            {selectedPostForView.content}
+          <div className="content-body markdown-body">
+            <ReactMarkdown>{selectedPostForView.content}</ReactMarkdown>
           </div>
         </article>
       </div>
