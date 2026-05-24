@@ -1,0 +1,76 @@
+:root {
+  --bg-color: #282c34;
+  --header-bg: #21252b;
+  --text-color: #abb2bf;
+  --accent-color: #61afef;
+  --hover-bg: #2c313a;
+  --active-bg: #282c34;
+  --border-color: #181a1f;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-header {
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 0;
+  height: 40px; /* VS Code tab height feel */
+}
+
+.nav-tabs {
+  display: flex;
+  height: 100%;
+}
+
+.nav-tab {
+  display: flex;
+  align-items: center;
+  padding: 0 25px;
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 13px;
+  border-right: 1px solid var(--border-color);
+  background-color: var(--header-bg);
+  transition: background-color 0.15s, color 0.15s;
+  user-select: none;
+}
+
+.nav-tab:hover {
+  background-color: var(--hover-bg);
+  color: #ffffff;
+}
+
+.nav-tab.active {
+  background-color: var(--active-bg);
+  color: var(--accent-color);
+  border-bottom: 1px solid var(--accent-color); /* Subtle active indicator */
+}
+
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 30px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
