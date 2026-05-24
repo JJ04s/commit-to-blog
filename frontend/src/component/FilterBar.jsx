@@ -1,7 +1,7 @@
 import React from 'react';
 import './FilterBar.css';
 
-const FilterBar = ({ filters, onFilterChange, totalCount }) => {
+const FilterBar = ({ filters, onFilterChange, totalCount, repositories }) => {
   const types = ['All', 'Feat', 'Fix', 'Refactor', 'Docs', 'Style'];
 
   const getTypeColor = (type) => {
@@ -22,9 +22,11 @@ const FilterBar = ({ filters, onFilterChange, totalCount }) => {
           value={filters.repository} 
           onChange={(e) => onFilterChange('repository', e.target.value)}
         >
-          <option value="All">All Repositories</option>
-          <option value="commit-to-blog">commit-to-blog</option>
-          <option value="portfolio-site">portfolio-site</option>
+          {repositories.map(repo => (
+            <option key={repo} value={repo}>
+              {repo === 'All' ? 'All Repositories' : repo}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -41,7 +43,7 @@ const FilterBar = ({ filters, onFilterChange, totalCount }) => {
                 style={isActive && type !== 'All' ? { 
                   borderColor: color, 
                   color: color,
-                  backgroundColor: `${color}15` // 15% opacity background
+                  backgroundColor: `${color}15`
                 } : {}}
                 onClick={() => onFilterChange('type', type)}
               >
