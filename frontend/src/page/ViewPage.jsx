@@ -20,8 +20,22 @@ const ViewPage = () => {
   const filteredPosts = MOCK_POSTS.filter(post => {
     const matchRepo = filters.repository === 'All' || post.repository === filters.repository;
     const matchType = filters.type === 'All' || post.type === filters.type;
-    const matchSearch = post.title.toLowerCase().includes(filters.search.toLowerCase()) || 
-                        post.tags.some(tag => tag.toLowerCase().includes(filters.search.toLowerCase()));
+    
+    // 검색 로직 보완
+    const searchTerm = filters.search.toLowerCase();
+    let matchSearch = true;
+    
+    if (searchTerm) {
+      if (searchTerm.startsWith('#')) {
+        // #으로 시작하면 태그에서만 검색 (예: #react -> react 태그 찾기)
+        const tagQuery = searchTerm.slice(1);
+        matchSearch = post.tags.some(tag => tag.toLowerCase().includes(tagQuery));
+      } else {
+        // 일반 검색은 제목과 태그 모두 포함
+        matchSearch = post.title.toLowerCase().includes(searchTerm) || 
+                      post.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+      }
+    }
     
     return matchRepo && matchType && matchSearch;
   });
