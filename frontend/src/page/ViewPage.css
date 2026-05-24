@@ -1,0 +1,33 @@
+.view-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Added to allow filter bar to be sticky and content to scroll */
+.view-content-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 100px 0;
+  color: #5c6370;
+  font-style: italic;
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .posts-grid {
+    grid-template-columns: 1fr;
+  }
+}

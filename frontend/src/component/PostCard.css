@@ -1,0 +1,102 @@
+.post-card {
+  background-color: var(--header-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 4px; /* More squared like VS Code */
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.15s;
+  cursor: pointer;
+  position: relative;
+}
+
+.post-card:hover {
+  border-color: #4b5263;
+}
+
+.edit-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #5c6370;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 3px;
+  display: none; /* Hidden by default */
+  transition: all 0.15s;
+}
+
+.post-card:hover .edit-button {
+  display: flex;
+}
+
+.edit-button:hover {
+  background-color: var(--hover-bg);
+  color: var(--accent-color);
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.repo-name {
+  font-size: 11px;
+  color: #5c6370;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.post-title {
+  font-size: 15px;
+  color: #d1d5db;
+  margin: 0;
+  line-height: 1.4;
+  font-weight: 500;
+  padding-right: 24px; /* Space for edit button */
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.type-badge {
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 6px;
+  border: 1px solid;
+  border-radius: 3px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.post-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 11px;
+  color: #61afef;
+  opacity: 0.7;
+}
+
+.card-footer {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(24, 26, 31, 0.5);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.post-date {
+  font-size: 10px;
+  color: #5c6370;
+}

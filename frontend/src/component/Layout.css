@@ -68,8 +68,7 @@ body {
 
 .content-area {
   flex: 1;
-  overflow-y: auto;
-  padding: 30px;
+  overflow-y: hidden; /* Changed to hidden to allow child pages to manage their own scroll */
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;

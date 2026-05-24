@@ -1,0 +1,90 @@
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: var(--header-bg);
+  padding: 8px 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  margin-top: 20px; /* 확실하게 띄워주기 위해 margin 추가 */
+  margin-bottom: 20px;
+  position: sticky;
+  top: 15px;
+  z-index: 10;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #5c6370;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.filter-bar select, 
+.filter-bar input {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  outline: none;
+}
+
+.filter-bar select:focus, 
+.filter-bar input:focus {
+  border-color: var(--accent-color);
+}
+
+.type-badges {
+  display: flex;
+  gap: 4px;
+}
+
+.type-badge-btn {
+  background-color: transparent;
+  border: 1px solid transparent;
+  color: #5c6370;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.type-badge-btn:hover {
+  color: #fff;
+}
+
+.type-badge-btn.active {
+  background-color: var(--active-bg);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.type-badge-btn.active:not([style]) {
+  background-color: rgba(97, 175, 239, 0.1);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.search-group {
+  flex: 1;
+  max-width: 400px;
+  margin-left: auto;
+}
+
+.search-group input {
+  width: 100%;
+}
+
+.results-count {
+  display: none; /* 지워줌 */
+}
