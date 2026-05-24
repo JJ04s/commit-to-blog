@@ -9,8 +9,10 @@
 
 ## 2. 레이아웃 규칙 (Layout Rules)
 - **Top Tab Navigation**: 40px 높이의 상단 탭 바 (VS Code 스타일).
-- **Max Width**: 메인 콘텐츠 영역은 최대 1200px 중앙 정렬.
-- **Padding**: 콘텐츠 영역 기본 패딩 30px.
+- **Max Width**: 메인 콘텐츠 영역은 최대 1200px 중앙 정렬 (단, 작성 탭은 전체 너비 활용).
+- **Split View (WRITE Tab)**: 좌측 300px 사이드바, 우측 가변 에디터 영역.
+- **Spacing & Padding**: 컨테이너 기본 패딩 20px, 요소 간 간격(gap) 20px.
+- **Card/Container Style**: `border: 1px solid #181a1f`, `border-radius: 8px` 적용으로 영역 구분 명확화.
 
 ## 3. 색상 구성 (Color Palette) - Atom One Dark
 - **Background**: `#282c34`
