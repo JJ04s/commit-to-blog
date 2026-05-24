@@ -25,11 +25,11 @@ github.interceptors.request.use(config => {
 const githubService = {
   /**
    * 1. 리포지토리 목록 조회 및 캐싱
-   * DB에 데이터가 있으면 즉시 반환, 없으면 GitHub API 호출 후 DB에 저장
+   * @param {boolean} sync - true일 경우 DB 무시하고 GitHub API 호출 후 동기화
    */
-  fetchAndCacheRepos: async () => {
+  fetchAndCacheRepos: async (sync = false) => {
     let repos = await Repository.find();
-    if (repos.length > 0) return repos;
+    if (repos.length > 0 && !sync) return repos;
 
     const response = await github.get('/user/repos?sort=updated');
     const repoData = response.data.map(repo => ({
@@ -37,7 +37,9 @@ const githubService = {
       owner: repo.owner.login
     }));
 
-    // insertMany를 통해 효율적으로 다중 저장
+    if (sync) {
+      await Repository.deleteMany({}); // 전체 동기화를 위해 기존 데이터 삭제
+    }
     return await Repository.insertMany(repoData);
   },
 
@@ -45,13 +47,14 @@ const githubService = {
    * 2. 브랜치 목록 조회 및 캐싱
    * @param {string} owner - 리포지토리 소유자
    * @param {string} repoName - 리포지토리 이름
+   * @param {boolean} sync - true일 경우 DB 무시하고 동기화
    */
-  fetchAndCacheBranches: async (owner, repoName) => {
+  fetchAndCacheBranches: async (owner, repoName, sync = false) => {
     const repo = await Repository.findOne({ owner, name: repoName });
     if (!repo) throw new Error(`Repository not found in DB: ${owner}/${repoName}`);
 
     let branches = await Branch.find({ repoId: repo._id });
-    if (branches.length > 0) return branches;
+    if (branches.length > 0 && !sync) return branches;
 
     const response = await github.get(`/repos/${owner}/${repoName}/branches`);
     const branchData = response.data.map(b => ({
@@ -59,6 +62,9 @@ const githubService = {
       repoId: repo._id
     }));
 
+    if (sync) {
+      await Branch.deleteMany({ repoId: repo._id });
+    }
     return await Branch.insertMany(branchData);
   },
 
@@ -67,14 +73,15 @@ const githubService = {
    * @param {string} owner - 리포지토리 소유자
    * @param {string} repoName - 리포지토리 이름
    * @param {string} branchName - 브랜치 이름
+   * @param {boolean} sync - true일 경우 DB 무시하고 동기화
    */
-  fetchAndCacheCommits: async (owner, repoName, branchName) => {
+  fetchAndCacheCommits: async (owner, repoName, branchName, sync = false) => {
     const repo = await Repository.findOne({ owner, name: repoName });
     const branch = await Branch.findOne({ name: branchName, repoId: repo?._id });
     if (!branch) throw new Error(`Branch not found in DB: ${branchName}`);
 
     let commits = await Commit.find({ branchId: branch._id });
-    if (commits.length > 0) return commits;
+    if (commits.length > 0 && !sync) return commits;
 
     const response = await github.get(`/repos/${owner}/${repoName}/commits?sha=${branchName}&per_page=10`);
     const commitData = response.data.map(c => ({
@@ -84,6 +91,9 @@ const githubService = {
       branchId: branch._id
     }));
 
+    if (sync) {
+      await Commit.deleteMany({ branchId: branch._id });
+    }
     return await Commit.insertMany(commitData);
   }
 };

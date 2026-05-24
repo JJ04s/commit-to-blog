@@ -46,9 +46,24 @@ const aiService = {
    */
   generatePostDraft: async (diffText) => {
     try {
-      // 인자가 문자열이 아니면 문자열로 변환 (안전장치)
       const safeDiffText = typeof diffText === 'string' ? diffText : JSON.stringify(diffText);
-      const model = genAI.getGenerativeModel({ model: "models/gemini-2.0-flash" });
+      
+      // JSON 모드와 스키마 설정을 통해 파싱 에러를 근본적으로 방지합니다.
+      const model = genAI.getGenerativeModel({ 
+        model: "models/gemini-2.5-flash",
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "object",
+            properties: {
+              title: { type: "string" },
+              content: { type: "string" },
+              tags: { type: "array", items: { type: "string" } }
+            },
+            required: ["title", "content", "tags"]
+          }
+        }
+      });
 
       const prompt = `
 당신은 숙련된 시니어 개발자이자 기술 블로거입니다. 
@@ -59,12 +74,6 @@ const aiService = {
 2. 상세한 연결고리: 단순히 수정한 내용을 나열하지 말고, 왜 이 수정을 했는지와 이 수정이 어떤 결과로 이어지는지 논리적으로 설명할 것.
 3. 톤앤매너: 전문적이면서도 친절한 개발자 블로그 말투 (Atom One Dark 테마의 정갈한 느낌).
 4. 형식: 마크다운(Markdown) 형식을 사용할 것.
-5. 응답 구조: 반드시 아래 JSON 형식으로 응답할 것.
-{
-  "title": "포스트 제목",
-  "content": "마크다운 본문",
-  "tags": ["기술스택1", "작업유형", "..."]
-}
 
 [Diff 데이터]
 ${safeDiffText.substring(0, 5000)}
@@ -74,11 +83,14 @@ ${safeDiffText.substring(0, 5000)}
       const response = await result.response;
       const text = response.text();
       
-      // JSON 응답 추출 (코드 블록 제거 등)
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error("Failed to parse AI response as JSON");
-      
-      return JSON.parse(jsonMatch[0]);
+      try {
+        return JSON.parse(text);
+      } catch (parseError) {
+        console.error("--- Raw AI Response (Debug) ---");
+        console.error(text);
+        console.error("-------------------------------");
+        throw new Error(`JSON Parsing failed at pos ${parseError.message.match(/\d+/)}: ${parseError.message}`);
+      }
     } catch (error) {
       throw new Error(`AI Generation failed: ${error.message}`);
     }

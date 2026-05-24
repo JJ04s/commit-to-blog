@@ -23,7 +23,12 @@ app.get('/', (req, res) => {
 
 // Post 관련 API 라우트 마운트
 const postRoutes = require('./routes/postRoutes');
+const githubRoutes = require('./routes/githubRoutes');
+const aiRoutes = require('./routes/aiRoutes');
+
 app.use('/api/posts', postRoutes);
+app.use('/api/github', githubRoutes);
+app.use('/api/ai', aiRoutes);
 
 const PORT = process.env.PORT || 5000;
 
