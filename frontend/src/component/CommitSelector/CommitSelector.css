@@ -1,0 +1,104 @@
+.commit-selector {
+  width: 100%;
+  height: 100%;
+  background-color: var(--header-bg, #21252b);
+  border: 1px solid var(--border-color, #181a1f); /* 외곽선 추가 */
+  border-radius: 8px; /* 둥근 모서리 추가 */
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  color: var(--text-main, #abb2bf);
+}
+
+.selector-header h3 {
+  font-size: 14px;
+  text-transform: uppercase;
+  color: var(--text-highlight, #ffffff);
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+.selector-section {
+  margin-bottom: 15px;
+}
+
+.selector-section label {
+  display: block;
+  font-size: 11px;
+  margin-bottom: 5px;
+  color: var(--accent-color, #61afef);
+  font-weight: bold;
+}
+
+.dark-select {
+  width: 100%;
+  background-color: var(--bg-color, #282c34);
+  color: var(--text-main, #abb2bf);
+  border: 1px solid var(--border-color, #181a1f);
+  padding: 8px;
+  border-radius: 4px;
+  outline: none;
+}
+
+.commit-list-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.commit-list-container label {
+  font-size: 11px;
+  margin-bottom: 5px;
+  color: var(--accent-color, #61afef);
+}
+
+.commit-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  border: 1px solid var(--border-color, #181a1f);
+  border-radius: 4px;
+  background-color: var(--bg-color, #282c34);
+}
+
+.commit-item {
+  padding: 10px;
+  border-bottom: 1px solid var(--border-color, #181a1f);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.commit-item:hover {
+  background-color: #2c313a;
+}
+
+.commit-message {
+  display: block;
+  font-size: 13px;
+  color: var(--text-highlight, #ffffff);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.commit-date {
+  font-size: 11px;
+  color: #5c6370;
+}
+
+.sync-btn {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: var(--accent-color, #61afef);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.sync-btn:hover {
+  opacity: 0.9;
+}

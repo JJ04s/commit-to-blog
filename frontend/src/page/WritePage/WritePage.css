@@ -1,0 +1,25 @@
+.write-page {
+  height: calc(100vh - 40px);
+  width: 100%;
+  overflow: hidden;
+  padding: 20px; /* 상하좌우 여백 추가 */
+  box-sizing: border-box;
+}
+
+.write-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  gap: 20px; /* 사이드바와 에디터 사이 간격 */
+}
+
+.commit-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.editor-area {
+  flex-grow: 1;
+  height: 100%;
+}

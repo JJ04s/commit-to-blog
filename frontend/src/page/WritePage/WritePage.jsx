@@ -1,14 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
+import CommitSelector from '../../component/CommitSelector/CommitSelector';
+import PostEditor from '../../component/PostEditor/PostEditor';
+import { getMockRepositories, MOCK_POSTS } from '../../api/mockData';
+import './WritePage.css';
 
-// --- [WritePage] 커밋 선택 및 AI 요약 작성 페이지 ---
 const WritePage = () => {
+  const [selectedCommit, setSelectedCommit] = useState(null);
+  const repositories = getMockRepositories();
+  
+  // 목데이터에서 커밋 리스트 추출 (간단하게 MOCK_POSTS 활용)
+  const mockCommits = MOCK_POSTS.map(post => ({
+    sha: post.commitSha,
+    message: post.title,
+    date: post.createdAt
+  }));
+
+  const handleSelectCommit = (commit) => {
+    setSelectedCommit(commit);
+  };
+
   return (
-    <div>
-      <h1>포스트 작성 (WRITE)</h1>
-      <p>GitHub 커밋을 선택하고 블로그 글을 생성합니다.</p>
+    <div className="write-page">
+      <div className="write-container">
+        <aside className="commit-sidebar">
+          <CommitSelector 
+            repositories={repositories} 
+            commits={mockCommits}
+            onSelectCommit={handleSelectCommit}
+          />
+        </aside>
+        
+        <main className="editor-area">
+          <PostEditor 
+            initialData={selectedCommit ? {
+              sha: selectedCommit.sha,
+              title: selectedCommit.message,
+              content: `Summary for commit: ${selectedCommit.sha}\n\nThis is an auto-generated placeholder content.`
+            } : {}} 
+          />
+        </main>
+      </div>
     </div>
   );
 };
 
 export default WritePage;
-// --- [WritePage] 구현 종료 ---
