@@ -1,19 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import CommitSelector from '../../component/CommitSelector/CommitSelector';
 import PostEditor from '../../component/PostEditor/PostEditor';
-import { getMockRepositories, MOCK_POSTS } from '../../api/mockData';
+import { useGlobalContext } from '../../context/GlobalContext';
 import './WritePage.css';
 
 const WritePage = () => {
-  const [selectedCommit, setSelectedCommit] = useState(null);
-  const repositories = getMockRepositories();
-  
-  // 목데이터에서 커밋 리스트 추출 (간단하게 MOCK_POSTS 활용)
-  const mockCommits = MOCK_POSTS.map(post => ({
-    sha: post.commitSha,
-    message: post.title,
-    date: post.createdAt
-  }));
+  const { 
+    repos, 
+    commits, 
+    selectedCommit, 
+    setSelectedCommit 
+  } = useGlobalContext();
 
   const handleSelectCommit = (commit) => {
     setSelectedCommit(commit);
@@ -24,8 +21,8 @@ const WritePage = () => {
       <div className="write-container">
         <aside className="commit-sidebar">
           <CommitSelector 
-            repositories={repositories} 
-            commits={mockCommits}
+            repositories={repos} 
+            commits={commits}
             onSelectCommit={handleSelectCommit}
           />
         </aside>

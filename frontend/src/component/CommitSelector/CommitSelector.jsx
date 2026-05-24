@@ -1,7 +1,10 @@
 import React from 'react';
+import { useGlobalContext } from '../../context/GlobalContext';
 import './CommitSelector.css';
 
 const CommitSelector = ({ repositories = [], commits = [], onSelectCommit }) => {
+  const { selectedRepo, setSelectedRepo } = useGlobalContext();
+
   return (
     <div className="commit-selector">
       <div className="selector-header">
@@ -10,7 +13,12 @@ const CommitSelector = ({ repositories = [], commits = [], onSelectCommit }) => 
       
       <div className="selector-section">
         <label>Repository</label>
-        <select className="dark-select">
+        <select 
+          className="dark-select" 
+          value={selectedRepo} 
+          onChange={(e) => setSelectedRepo(e.target.value)}
+        >
+          <option value="" disabled>Select a repository</option>
           {repositories.map(repo => (
             <option key={repo} value={repo}>{repo}</option>
           ))}

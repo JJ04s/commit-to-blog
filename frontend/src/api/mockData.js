@@ -42,8 +42,43 @@ export const MOCK_POSTS = [
   }
 ];
 
+export const MOCK_REPOS = [
+  { id: 1, name: 'commit-to-blog', description: 'AI driven dev blog' },
+  { id: 2, name: 'backend-core', description: 'Core API service' },
+  { id: 3, name: 'auth-service', description: 'Authentication microservice' }
+];
+
+export const MOCK_BRANCHES = [
+  { name: 'main', repo: 'commit-to-blog' },
+  { name: 'develop', repo: 'commit-to-blog' },
+  { name: 'main', repo: 'backend-core' }
+];
+
+export const MOCK_COMMITS = [
+  { 
+    sha: 'sha123456789', 
+    message: 'feat: add global context provider', 
+    date: '2026-05-25T10:00:00Z', 
+    repo: 'commit-to-blog',
+    author: 'pjjun'
+  },
+  { 
+    sha: 'sha987654321', 
+    message: 'fix: layout breakage in editor', 
+    date: '2026-05-25T11:00:00Z', 
+    repo: 'commit-to-blog',
+    author: 'pjjun'
+  },
+  { 
+    sha: 'shabackend001', 
+    message: 'chore: update mongoose schema', 
+    date: '2026-05-24T09:00:00Z', 
+    repo: 'backend-core',
+    author: 'pjjun'
+  }
+];
+
 // Helper to get unique repositories from posts
 export const getMockRepositories = () => {
-  const repos = MOCK_POSTS.map(post => post.repository);
-  return ['All', ...new Set(repos)];
+  return MOCK_REPOS.map(repo => repo.name);
 };
