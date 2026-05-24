@@ -42,6 +42,11 @@
   color: var(--accent-color);
 }
 
+.detail-actions {
+  display: flex;
+  gap: 10px;
+}
+
 .edit-action-btn {
   background-color: var(--accent-color);
   color: #ffffff;
@@ -51,6 +56,21 @@
   font-size: 13px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.delete-action-btn {
+  background-color: transparent;
+  border: 1px solid #e06c75;
+  color: #e06c75;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.delete-action-btn:hover {
+  background-color: rgba(224, 108, 117, 0.1);
 }
 
 .detail-repo {

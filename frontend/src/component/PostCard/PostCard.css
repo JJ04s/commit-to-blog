@@ -15,27 +15,41 @@
   border-color: #4b5263;
 }
 
-.edit-button {
+.card-actions {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: transparent;
-  border: none;
-  color: #5c6370;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 3px;
-  display: none; /* Hidden by default */
-  transition: all 0.15s;
+  display: none;
+  gap: 8px;
+  z-index: 5;
 }
 
-.post-card:hover .edit-button {
+.post-card:hover .card-actions {
   display: flex;
 }
 
+.edit-button, .delete-button {
+  background: var(--header-bg);
+  border: 1px solid var(--border-color);
+  color: #5c6370;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
 .edit-button:hover {
-  background-color: var(--hover-bg);
+  border-color: var(--accent-color);
   color: var(--accent-color);
+}
+
+.delete-button:hover {
+  border-color: #e06c75;
+  color: #e06c75;
+  background-color: rgba(224, 108, 117, 0.1);
 }
 
 .card-header {

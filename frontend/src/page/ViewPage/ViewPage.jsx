@@ -39,7 +39,7 @@ const ViewPage = () => {
     fetchPosts();
   }, [setPosts]);
 
-  // 필터링 로직 보강
+  // 필터링 로직
   const filteredPosts = posts.filter(post => {
     const matchRepo = repoFilter === "전체" || post.repoName === repoFilter;
     const matchType = typeFilter === "All" || post.type === typeFilter;
@@ -52,17 +52,31 @@ const ViewPage = () => {
   });
 
   const handleEdit = (post) => {
-    // 전역 상태에 포스트 데이터 주입
     setTitle(post.title);
     setContent(post.content);
     setTags(post.tags || []);
     setEditingPostId(post._id);
     setSelectedRepo(post.repoName);
-    // 수정 모드에서는 가짜 커밋 객체를 생성하여 에디터가 SHA를 인식하게 함
     setSelectedCommit({ sha: post.commitSha });
-    
-    // 작성 탭으로 이동
     navigate('/write');
+  };
+
+  const handleDelete = async (id) => {
+    console.log("Delete triggered for ID:", id); // 디버깅 로그 추가
+    if (!window.confirm('정말 삭제하시겠습니까?')) return;
+    
+    try {
+      await postService.deletePost(id);
+      alert('삭제되었습니다.');
+      // 목록에서 즉시 제거
+      setPosts(prevPosts => prevPosts.filter(p => p._id !== id));
+      if (selectedPostForView && selectedPostForView._id === id) {
+        setSelectedPostForView(null);
+      }
+    } catch (error) {
+      console.error('Delete failed:', error);
+      alert('삭제에 실패했습니다.');
+    }
   };
 
   if (isLoading) {
@@ -80,6 +94,9 @@ const ViewPage = () => {
           <div className="detail-actions">
             <button className="edit-action-btn" onClick={() => handleEdit(selectedPostForView)}>
               Edit Post
+            </button>
+            <button className="delete-action-btn" onClick={() => handleDelete(selectedPostForView._id)}>
+              Delete
             </button>
           </div>
         </div>
@@ -119,6 +136,7 @@ const ViewPage = () => {
                 key={post._id} 
                 post={post} 
                 onEdit={() => handleEdit(post)}
+                onDelete={() => handleDelete(post._id)}
                 onClick={() => setSelectedPostForView(post)} 
               />
             ))
