@@ -1,7 +1,7 @@
 import React from 'react';
 import './PostCard.css';
 
-const PostCard = ({ post, onEdit }) => {
+const PostCard = ({ post, onEdit, onClick }) => {
   // 방어 코드: post나 post.type이 없을 경우 대비
   const getTypeColor = (type = 'feat') => {
     const safeType = type ? type.toLowerCase() : 'feat';
@@ -16,12 +16,12 @@ const PostCard = ({ post, onEdit }) => {
   };
 
   const handleEditClick = (e) => {
-    e.stopPropagation();
+    e.stopPropagation(); // 카드 클릭(상세보기) 방지
     if (onEdit) onEdit(post._id);
   };
 
   return (
-    <div className="post-card">
+    <div className="post-card" onClick={onClick}>
       <button 
         className="edit-button" 
         onClick={handleEditClick}
