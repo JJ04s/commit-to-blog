@@ -25,7 +25,7 @@ const CommitSelector = ({ onSelectCommit }) => {
       // 이름 기준으로 중복 제거
       const uniqueRepos = Array.from(new Map(data.map(item => [item.name, item])).values());
       setRepoData(uniqueRepos);
-      setRepos(uniqueRepos.map(r => r.name));
+      setRepos(uniqueRepos); // 이름 배열이 아닌 전체 객체 배열 저장
     } catch (error) {
       console.error('Failed to fetch repositories:', error);
     }
@@ -99,7 +99,7 @@ const CommitSelector = ({ onSelectCommit }) => {
         >
           <option value="" disabled>Select a repository</option>
           {repos.map(repo => (
-            <option key={repo} value={repo}>{repo}</option>
+            <option key={repo.name} value={repo.name}>{repo.name}</option>
           ))}
         </select>
       </div>

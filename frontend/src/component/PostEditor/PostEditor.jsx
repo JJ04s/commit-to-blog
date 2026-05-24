@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useGlobalContext } from '../../context/GlobalContext';
 import { postService } from '../../api/postService';
+import { aiService } from '../../api/aiService';
 import './PostEditor.css';
 
 const PostEditor = () => {
   const { 
+    repos,
     title, setTitle, 
     content, setContent, 
     tags, setTags,
@@ -13,7 +15,8 @@ const PostEditor = () => {
     selectedCommit,
     setActiveTab,
     setPosts,
-    editingPostId, setEditingPostId
+    editingPostId, setEditingPostId,
+    isSummarizing, setIsSummarizing
   } = useGlobalContext();
 
   const [isSaving, setIsSaving] = useState(false);
@@ -41,6 +44,36 @@ const PostEditor = () => {
 
   const removeTag = (tagToRemove) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  const handleAiSummarize = async () => {
+    if (!selectedRepo || !selectedCommit) {
+      alert('Please select a repository and a commit first.');
+      return;
+    }
+
+    // repos 객체 배열에서 현재 선택된 repo의 owner 찾기
+    const repoInfo = repos.find(r => r.name === selectedRepo);
+    if (!repoInfo) {
+      alert('Repository information not found.');
+      return;
+    }
+
+    setIsSummarizing(true);
+    try {
+      const draft = await aiService.summarizeCommit(repoInfo.owner, selectedRepo, selectedCommit.sha);
+      
+      setTitle(draft.title || title);
+      setContent(draft.content || content);
+      setTags(draft.tags || tags);
+      
+      alert('AI technical analysis generated successfully!');
+    } catch (error) {
+      console.error('AI Summarization failed:', error);
+      alert(`AI Summary Error: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setIsSummarizing(false);
+    }
   };
 
   const handleSave = async () => {
@@ -94,7 +127,13 @@ const PostEditor = () => {
         <div className="editor-status">
           {editingPostId ? `Editing Post: ${editingPostId}` : (selectedCommit ? `Commit: ${selectedCommit.sha.substring(0, 7)}` : 'No Commit Selected')}
         </div>
-        <button className="ai-gen-btn">✨ AI 요약 생성</button>
+        <button 
+          className="ai-gen-btn" 
+          onClick={handleAiSummarize}
+          disabled={isSummarizing || !selectedCommit}
+        >
+          {isSummarizing ? '✨ 분석 중...' : '✨ AI 요약 생성'}
+        </button>
       </div>
 
       <div className="editor-main">
